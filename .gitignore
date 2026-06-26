@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+ENV/
+.env
+
+# MediaPipe & YOLO models
+*.pt
+*.task
+
+# Database
+*.db
+*.db-journal
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
