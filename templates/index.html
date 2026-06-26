@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Palm Payment Camera Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+<h2>Palm Payment Camera Test</h2>
+
+<p id="status">Status: Not started</p>
+
+<video
+    id="video"
+    autoplay
+    playsinline
+    width="100%">
+</video>
+
+<br><br>
+
+<button onclick="startCamera()">
+    Start Camera
+</button>
+
+<script>
+
+async function checkCapture() {
+
+    const response = await fetch("/should_capture");
+    const data = await response.json();
+
+    if (data.capture) {
+        captureImage();
+    }
+}
+
+setInterval(checkCapture, 300);
+
+function captureImage() {
+
+    const video = document.getElementById("video");
+
+    const canvas = document.createElement("canvas");
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    const ctx = canvas.getContext("2d");
+
+    ctx.drawImage(video, 0, 0);
+
+    // For now, just show that it worked
+    document.body.appendChild(canvas);
+
+    console.log("Image captured!");
+}
+
+async function startCamera() {
+
+    const status = document.getElementById("status");
+
+    status.innerText =
+        "Secure Context: " + window.isSecureContext;
+
+    console.log("navigator =", navigator);
+    console.log("mediaDevices =", navigator.mediaDevices);
+
+    if (!window.isSecureContext) {
+        alert("This page is NOT running in a secure context.");
+        return;
+    }
+
+    if (!navigator.mediaDevices) {
+        alert("navigator.mediaDevices is undefined.");
+        return;
+    }
+
+    if (!navigator.mediaDevices.getUserMedia) {
+        alert("getUserMedia is not available.");
+        return;
+    }
+
+    try {
+
+        const stream =
+            await navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: "user"
+                },
+                audio: false
+            });
+
+        document.getElementById("video").srcObject = stream;
+
+        status.innerText = "Camera started successfully.";
+
+    }
+    catch(err) {
+
+        console.error(err);
+        alert(err);
+
+        status.innerText = err.toString();
+
+    }
+
+}
+
+
+
+</script>
+
+</body>
+</html>
