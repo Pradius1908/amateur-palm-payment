@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PalmPay User Registration</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>User Registration</h1>
+            <nav>
+                <a href="/">Dashboard</a> | 
+                <a href="/pay.html">Process Payment</a> | 
+                <a href="/verify.html">Verify User</a> | 
+                <a href="/admin.html">Admin Panel</a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="card registration-card">
+                <h2>Register New Palm</h2>
+                <div class="camera-container">
+                    <video id="webcam" autoplay playsinline width="640" height="480"></video>
+                    <canvas id="snapshot" style="display:none;" width="640" height="480"></canvas>
+                </div>
+                
+                <div class="form-group">
+                    <input type="text" id="user-name" placeholder="Enter Full Name" required>
+                    <button id="capture-btn" class="btn edit-btn">Capture & Register</button>
+                </div>
+                
+                <div id="status-message" class="status-box"></div>
+            </section>
+        </main>
+    </div>
+    <script src="register.js"></script>
+</body>
+</html>

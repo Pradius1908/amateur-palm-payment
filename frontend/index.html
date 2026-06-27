@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PalmPay - Unified Biometric Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #0b0f19;
+            color: #f1f5f9;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        header h1 {
+            color: #38bdf8;
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 0.2rem;
+            letter-spacing: -0.025em;
+        }
+
+        header p {
+            color: #64748b;
+            font-size: 1rem;
+            margin: 0 0 1rem 0;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1.5fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .stream-card {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+        }
+
+        .stream-view-container {
+            width: 100%;
+            aspect-ratio: 4/3;
+            background: #030712;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px dashed #374151;
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        #stream-canvas {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: none;
+        }
+
+        .placeholder-view {
+            text-align: center;
+            padding: 2rem;
+            color: #64748b;
+        }
+
+        .placeholder-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid #1f2937;
+            border-top: 3px solid #38bdf8;
+            border-radius: 50%;
+            animation: spin 1s infinite linear;
+            margin: 0 auto 1.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .qr-section {
+            width: 100%;
+            background: #1f2937;
+            border-radius: 10px;
+            padding: 1rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            box-sizing: border-box;
+            border: 1px solid #374151;
+        }
+
+        .qr-image {
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 8px;
+            padding: 5px;
+        }
+
+        .qr-info h4 {
+            margin: 0 0 0.25rem 0;
+            color: #f1f5f9;
+        }
+
+        .qr-info p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            word-break: break-all;
+        }
+
+        .auth-card {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0.5rem;
+            border-bottom: 2px solid #1f2937;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: #64748b;
+            font-size: 1.05rem;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            color: #f1f5f9;
+            background: #1f2937;
+        }
+
+        .tab-btn.active {
+            color: #38bdf8;
+            background: rgba(56, 189, 248, 0.1);
+        }
+
+        .tab-content {
+            display: none;
+            flex-direction: column;
+            gap: 1rem;
+            flex-grow: 1;
+        }
+
+        .tab-content.active {
+            display: flex;
+        }
+
+        .form-label {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+
+        .form-control-dark {
+            background: #030712;
+            border: 1px solid #374151;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            color: #f1f5f9;
+            font-size: 1rem;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .form-control-dark:focus {
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+        }
+
+        .dashboard-btn {
+            background: #0284c7;
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px rgba(2, 132, 199, 0.3);
+        }
+
+        .dashboard-btn:hover {
+            background: #0369a1;
+            transform: translateY(-1px);
+        }
+
+        .dashboard-btn:disabled {
+            background: #374151;
+            color: #64748b;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .result-box {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 8px;
+            min-height: 50px;
+            display: none;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-pill-offline {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .status-pill-online {
+            background: rgba(34, 197, 94, 0.15);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                <div>
+                    <h1>PalmPay - Unified Biometric Dashboard</h1>
+                    <p>Real-Time Android Camera Streaming & Palm Authentication Server</p>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <a href="/mobile.html" target="_blank" style="color: #38bdf8; text-decoration: none; font-weight: 600; border: 1px solid #38bdf8; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.9rem;">Open Mobile Streamer</a>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="dashboard-grid">
+                <!-- Stream View Column -->
+                <div class="stream-card">
+                    <div style="width:100%; display:flex; justify-content:space-between; margin-bottom:1rem; align-items:center;">
+                        <h3 style="margin:0; font-size:1.1rem; font-weight:600;">Android Live Stream</h3>
+                        <div id="camera-status" class="status-pill status-pill-offline">
+                            <span style="width:6px; height:6px; background:currentColor; border-radius:50%;"></span>
+                            Offline
+                        </div>
+                    </div>
+                    
+                    <div class="stream-view-container">
+                        <div id="stream-placeholder" class="placeholder-view">
+                            <div class="placeholder-spinner"></div>
+                            <p style="margin:0; font-weight:600; font-size:0.95rem;">Waiting for mobile stream...</p>
+                            <p style="margin:5px 0 0 0; font-size:0.8rem; color:#475569;">Connect Android device to begin</p>
+                        </div>
+                        <canvas id="stream-canvas"></canvas>
+                    </div>
+
+                    <div class="qr-section">
+                        <img id="qr-img" class="qr-image" src="" alt="QR Code Link">
+                        <div class="qr-info">
+                            <h4>Scan to stream</h4>
+                            <p id="qr-text">Loading mobile endpoint URL...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Controls Column -->
+                <div class="auth-card">
+                    <div class="tabs-header">
+                        <button class="tab-btn active" onclick="switchTab('verify')">Verify Palm</button>
+                        <button class="tab-btn" onclick="switchTab('pay')">Process Payment</button>
+                        <button class="tab-btn" onclick="switchTab('register')">Register Palm</button>
+                    </div>
+
+                    <!-- Verify Palm Tab -->
+                    <div id="verify-tab" class="tab-content active">
+                        <p style="color: #94a3b8; font-size: 0.95rem; margin-top: 0;">Point the Android device at a registered user's palm to identify them.</p>
+                        <button id="verify-btn" class="dashboard-btn" disabled>Identify & Verify Palm</button>
+                    </div>
+
+                    <!-- Pay Tab -->
+                    <div id="pay-tab" class="tab-content">
+                        <p style="color: #94a3b8; font-size: 0.95rem; margin-top: 0;">Scan palm and debit the requested amount from customer's account balance.</p>
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;">
+                            <label class="form-label" for="pay-amount">Amount (rs):</label>
+                            <input id="pay-amount" class="form-control-dark" type="number" step="0.01" value="50.00">
+                        </div>
+                        <button id="pay-btn" class="dashboard-btn" disabled>Confirm & Process Debit</button>
+                    </div>
+
+                    <!-- Register Tab -->
+                    <div id="register-tab" class="tab-content">
+                        <p style="color: #94a3b8; font-size: 0.95rem; margin-top: 0;">Add a new customer to the biometric system. Enter name and scan their palm.</p>
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;">
+                            <label class="form-label" for="register-name">Customer Name:</label>
+                            <input id="register-name" class="form-control-dark" type="text" placeholder="e.g. John Doe">
+                        </div>
+                        <button id="register-btn" class="dashboard-btn" disabled>Capture & Register User</button>
+                    </div>
+
+                    <div id="result-box" class="result-box"></div>
+                </div>
+            </div>
+
+            <!-- Stats and Tables -->
+            <section class="stats" style="margin-bottom: 2rem;">
+                <div class="card" style="background:#111827; border:1px solid #1f2937;">
+                    <h3>Total Registered Users</h3>
+                    <p id="total-users" style="color:#38bdf8;">0</p>
+                </div>
+                <div class="card" style="background:#111827; border:1px solid #1f2937;">
+                    <h3>Recent Transactions</h3>
+                    <p id="total-tx" style="color:#10b981;">0</p>
+                </div>
+            </section>
+
+            <section class="tables-container">
+                <div class="table-card" style="background:#111827; border:1px solid #1f2937;">
+                    <h2>Registered Users</h2>
+                    <table id="users-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Balance ($)</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <div class="table-card" style="background:#111827; border:1px solid #1f2937;">
+                    <h2>Recent Activity Log</h2>
+                    <table id="tx-table">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Amount</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <script src="app.js?v=2"></script>
+    <script>
+        // Tab switching utility
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Find active button
+            const eventTarget = window.event ? window.event.currentTarget : null;
+            if (eventTarget) {
+                eventTarget.classList.add('active');
+            } else {
+                // Fallback by name
+                const btn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.textContent.toLowerCase().includes(tabId));
+                if (btn) btn.classList.add('active');
+            }
+            
+            document.getElementById(`${tabId}-tab`).classList.add('active');
+            
+            // Clear current result state on switch
+            const resultBox = document.getElementById('result-box');
+            resultBox.style.display = 'none';
+            resultBox.innerHTML = '';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PalmPay Admin Panel</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>PalmPay Admin Panel</h1>
+            <nav>
+                <a href="/">Dashboard</a> | 
+                <a href="/register.html">Register User</a> |
+                <a href="/pay.html">Process Payment</a> | 
+                <a href="/verify.html">Verify User</a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="table-card">
+                <h2>Manage User Balances</h2>
+                <table id="admin-users-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Balance ($)</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+
+    <!-- Edit Balance Modal (Simple prompt based or hidden div) -->
+    <script src="admin.js"></script>
+</body>
+</html>

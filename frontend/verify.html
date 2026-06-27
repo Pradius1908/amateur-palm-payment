@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PalmPay Verification Test</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Verification Test</h1>
+            <nav>
+                <a href="/">Dashboard</a> | 
+                <a href="/register.html">Register User</a> |
+                <a href="/pay.html">Process Payment</a> |
+                <a href="/admin.html">Admin Panel</a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="card registration-card">
+                <h2>Test User Identification</h2>
+                <p>Position your palm to verify your identity without making a payment.</p>
+                <div class="camera-container">
+                    <video id="webcam" autoplay playsinline width="640" height="480"></video>
+                    <canvas id="snapshot" style="display:none;" width="640" height="480"></canvas>
+                </div>
+                
+                <div class="form-group" style="justify-content: center;">
+                    <button id="verify-btn" class="btn edit-btn" style="padding: 1rem 2rem; font-size: 1.1rem;">Verify My Palm</button>
+                </div>
+                
+                <div id="status-message" class="status-box" style="text-align: center; font-size: 1.2rem; margin-top: 1rem;"></div>
+            </section>
+        </main>
+    </div>
+    <script src="verify.js"></script>
+</body>
+</html>

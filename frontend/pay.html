@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PalmPay - Process Payment</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Palm Payment Service</h1>
+            <nav>
+                <a href="/">Dashboard</a> | 
+                <a href="/register.html">Register User</a> |
+                <a href="/verify.html">Verify User</a> |
+                <a href="/admin.html">Admin Panel</a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="card registration-card">
+                <h2>Make a Payment</h2>
+                <p>Scan your palm to pay <strong>50.00rs</strong> to the Shop Owner.</p>
+                <div class="camera-container">
+                    <video id="webcam" autoplay playsinline width="640" height="480"></video>
+                    <canvas id="snapshot" style="display:none;" width="640" height="480"></canvas>
+                </div>
+                
+                <div class="form-group" style="justify-content: center;">
+                    <button id="pay-btn" class="btn delete-btn" style="padding: 1.2rem 3rem; font-size: 1.3rem; background-color: #059669;">Confirm & Pay 50rs</button>
+                </div>
+                
+                <div id="status-message" class="status-box" style="text-align: center; font-size: 1.4rem; margin-top: 1rem;"></div>
+            </section>
+        </main>
+    </div>
+    <script src="pay.js"></script>
+</body>
+</html>
